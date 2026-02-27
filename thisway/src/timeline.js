@@ -53,11 +53,11 @@ export function registerAllEffects(dm) {
   const televisionStart4 = new FXTelevision(); televisionStart4.setup();
 
   const arrows1 = new FXEuskalArrows();
-  arrows1.setup('data/3Dscenes/arrows1/scene.PTA', 'data/textures/arrows', 'Camera02', 0.0, 0.2, 0, 1.0);
+  arrows1.setup('data/3dscenes/arrows1/scene.pta', 'data/textures/arrows', 'Camera02', 0.0, 0.2, 0, 1.0);
   const arrows2 = new FXEuskalArrows();
-  arrows2.setup('data/3Dscenes/arrows1/scene.PTA', 'data/textures/arrows', 'Camera03', 0.0, 0.2, 0, 1.0);
+  arrows2.setup('data/3dscenes/arrows1/scene.pta', 'data/textures/arrows', 'Camera03', 0.0, 0.2, 0, 1.0);
   const arrows3 = new FXEuskalArrows();
-  arrows3.setup('data/3Dscenes/arrows1/scene.PTA', 'data/textures/arrows', 'Camera01', 0.0, 0.2, 0, 1.0);
+  arrows3.setup('data/3dscenes/arrows1/scene.pta', 'data/textures/arrows', 'Camera01', 0.0, 0.2, 0, 1.0);
   const arrowsTransition = new FXImageStencilTransition();
   arrowsTransition.setup(2000.0, 'data/textures/arrows/transition.tga');
   const arrowsTransitionCapture = new FXTransitionCapture(arrowsTransition);
@@ -67,7 +67,7 @@ export function registerAllEffects(dm) {
   const particleSteamSph = [];
   for (let i = 0; i < 6; i++) {
     const ps = new FXEuskal10ParticleSteam();
-    ps.setup(700, 1.0, 2.0, -200.0, 200.0, 0.008, 0.015, 200.0, 'data/textures/Particles/glowwhite.tga', true, steamColor);
+    ps.setup(700, 1.0, 2.0, -200.0, 200.0, 0.008, 0.015, 200.0, 'data/textures/particles/glowwhite.tga', true, steamColor);
     particleSteamSph.push(ps);
   }
 
@@ -82,7 +82,7 @@ export function registerAllEffects(dm) {
   const sphereFadeIn = [0, 1000, 1000, 1000, 1000, 1000];
   const particledSpheres = sphereCameras.map((cam, i) => {
     const ps = new FXEP10ParticledSpheres();
-    ps.setup('data/3Dscenes/particledspheres/scene.pta', 'data/textures/particledspheres/part.tga', 'data/textures/particledspheres', cam, sphereSceneTimes[i], 0.2);
+    ps.setup('data/3dscenes/particledspheres/scene.pta', 'data/textures/particledspheres/part.tga', 'data/textures/particledspheres', cam, sphereSceneTimes[i], 0.2);
     if (sphereFadeIn[i] > 0) ps.setFade(sphereFadeIn[i]);
     return ps;
   });
@@ -101,7 +101,7 @@ export function registerAllEffects(dm) {
   bgLayer1Spike.setup([0.5, 0.5, 0.0], [0.5, 0.5, 0.5], [1.28, 1.219, 0.0], [1.28, 1.219, 0.0], 0.0, 0.0, 1000.0, 12900.0, 1000.0, 'data/textures/spike/background.jpg', 1.0, 1.0);
 
   const spike = new FXBonedSpike();
-  spike.setup(0, 0, 0, 0, 0, 0, 4.0, 'data/3Dscenes/spike/spike.pta', 'data/textures/spike');
+  spike.setup(0, 0, 0, 0, 0, 0, 4.0, 'data/3dscenes/spike/spike.pta', 'data/textures/spike');
 
   const pulsatingImg1 = new FXPulsatingImageTest();
   pulsatingImg1.setup(0.5, 0.5, 1.28, 1.21, 0.0, 1.0, 'data/textures/spike/flash.tga');
@@ -131,16 +131,16 @@ export function registerAllEffects(dm) {
   const transitionExplCapture = new FXTransitionCapture(transitionExpl);
 
   const mamutBackground = new FXFadedImage();
-  mamutBackground.setup([0.5, 0.5, 0.0], [0.5, 0.5, 0.5], [1.28, 1.219, 0.0], [1.28, 1.219, 0.0], 0.0, 0.0, 0, 14000.0, 0, 'data/textures/Mamut/background.jpg', 1.0, 1.0);
+  mamutBackground.setup([0.5, 0.5, 0.0], [0.5, 0.5, 0.5], [1.28, 1.219, 0.0], [1.28, 1.219, 0.0], 0.0, 0.0, 0, 14000.0, 0, 'data/textures/mamut/background.jpg', 1.0, 1.0);
   const mamut = new FX3DObjectMamut();
-  mamut.setup('mamut', 'Camera01', 'data/3Dscenes/mamut/mamut.PTA', 'data/textures/Mamut');
+  mamut.setup('mamut', 'Camera01', 'data/3dscenes/mamut/mamut.pta', 'data/textures/mamut');
 
   const bumpBackground = new FXFadedImage();
   bumpBackground.setup([0.5, 0.5, 0.0], [0.5, 0.5, 0.5], [1.28, 1.219, 0.0], [1.28, 1.219, 0.0], 0.0, 0.0, 1000.0, 12900.0, 1000.0, 'data/textures/bump/background.jpg', 1.0, 1.0);
   const bumpScroll = new FXInfiniteScroll();
   bumpScroll.setup([0.5, 0.5, 0.5], [1.0, 1.0, 1.0], [1.0, -1.0, 0.0], [0.0, 0.0, 0.0], 0.2, 0.8, 'data/textures/bump/grid.tga', false);
   const bump = new FX3DObjectBump();
-  bump.setup('bump', 'Camera01', 'data/3Dscenes/bump/scene.pta', 'data/textures/bump');
+  bump.setup('bump', 'Camera01', 'data/3dscenes/bump/scene.pta', 'data/textures/bump');
 
   const classicBG1 = new FXBackground1(); classicBG1.setup(22, 0.7, 0.7, 'data/textures/classical/bg1.tga');
   const classicBG2 = new FXBackground1(); classicBG2.setup(22, 0.7, 0.7, 'data/textures/classical/bg2.tga');
@@ -194,10 +194,10 @@ export function registerAllEffects(dm) {
   wonder.setup(6, wonderTextures, 'data/textures/credits/wonder', 0.3, 0.7, 0.04, 0.04, 0.26, 5000.0, 1450.0, 200.0);
 
   const hairyObject = new FXHairyObject();
-  hairyObject.setup(30, 190.0, 8.0, 3.0, 'data/textures/Particles/glowwhite.jpg', 'data/3Dscenes/hairy/hairy.pta', 'GeoSphere01', 'Camera01');
+  hairyObject.setup(30, 190.0, 8.0, 3.0, 'data/textures/particles/glowwhite.jpg', 'data/3dscenes/hairy/hairy.pta', 'GeoSphere01', 'Camera01');
 
   const euskal10Circles = new FXEuskal10Circles();
-  euskal10Circles.setup('data/3Dscenes/circles/scene.pta', 'data/textures/circles', 'Camera01', 0.0, 1.0, 'data/textures/circles/background.jpg');
+  euskal10Circles.setup('data/3dscenes/circles/scene.pta', 'data/textures/circles', 'Camera01', 0.0, 1.0, 'data/textures/circles/background.jpg');
 
   const circlesTransition = new FXImageStencilTransition();
   circlesTransition.setup(2000.0, 'data/textures/transitions/circles1.tga');
@@ -205,15 +205,15 @@ export function registerAllEffects(dm) {
 
   // Calamares (greets scenes)
   const calamaresSetups = [
-    { deform: 40, file: 'camera01.PTA', cam: 'Camera01', time: 0.0, speed: 1.0 },
-    { deform: 40, file: 'camera05.PTA', cam: 'Camera05', time: 0.0, speed: 1.0 },
-    { deform: 40, file: 'camera03.PTA', cam: 'Camera03', time: 0.0, speed: 1.0 },
-    { deform: 40, file: 'camera04.PTA', cam: 'Camera04', time: 600.0, speed: 0.9 },
+    { deform: 40, file: 'camera01.pta', cam: 'Camera01', time: 0.0, speed: 1.0 },
+    { deform: 40, file: 'camera05.pta', cam: 'Camera05', time: 0.0, speed: 1.0 },
+    { deform: 40, file: 'camera03.pta', cam: 'Camera03', time: 0.0, speed: 1.0 },
+    { deform: 40, file: 'camera04.pta', cam: 'Camera04', time: 600.0, speed: 0.9 },
   ];
   const calamareseFadeIn = [0, 500, 500, 500]; // No fade for first, 500ms for 2-4 (matches overlap)
   const calamares = calamaresSetups.map((s, i) => {
     const fx = new FXEuskal10GreetsScene();
-    fx.setup(s.deform, `data/3Dscenes/calamares/${s.file}`, 'data/textures/calamares', s.cam, s.time, s.speed);
+    fx.setup(s.deform, `data/3dscenes/calamares/${s.file}`, 'data/textures/calamares', s.cam, s.time, s.speed);
     fx.setFade(calamareseFadeIn[i]);
     return fx;
   });
@@ -222,7 +222,7 @@ export function registerAllEffects(dm) {
   const particleSteamCal = [];
   for (let i = 0; i < 4; i++) {
     const ps = new FXEuskal10ParticleSteam();
-    ps.setup(600, 1.0, 2.0, 0.0, 400.0, 0.008, 0.015, 350.0, 'data/textures/Particles/glowwhite.tga', true, steamColor);
+    ps.setup(600, 1.0, 2.0, 0.0, 400.0, 0.008, 0.015, 350.0, 'data/textures/particles/glowwhite.tga', true, steamColor);
     particleSteamCal.push(ps);
   }
 
@@ -237,7 +237,7 @@ export function registerAllEffects(dm) {
   ];
   const greets = greetTextures.map((tex, i) => {
     const fx = new FXEuskal10Greets();
-    fx.setup(greetPositions[i][0], greetPositions[i][1], 0.3, 0.06, 1500.0, 2000.0, 1500.0, `data/textures/Greets/${tex}.tga`);
+    fx.setup(greetPositions[i][0], greetPositions[i][1], 0.3, 0.06, 1500.0, 2000.0, 1500.0, `data/textures/greets/${tex}.tga`);
     return fx;
   });
 
@@ -256,7 +256,7 @@ export function registerAllEffects(dm) {
   ];
   const respects = respectTextures.map((tex, i) => {
     const fx = new FXEuskal10Greets();
-    fx.setup(respectPositions[i][0], respectPositions[i][1], respectSizes[i][0], respectSizes[i][1], 1500.0, 2000.0, 1500.0, `data/textures/Greets/${tex}.tga`);
+    fx.setup(respectPositions[i][0], respectPositions[i][1], respectSizes[i][0], respectSizes[i][1], 1500.0, 2000.0, 1500.0, `data/textures/greets/${tex}.tga`);
     return fx;
   });
 
@@ -269,7 +269,7 @@ export function registerAllEffects(dm) {
   }
 
   const finalScreenToObj = new FXMapScreenToObject();
-  finalScreenToObj.setup('data/3Dscenes/FinalTV/television.pta', 'tv', 'Camera01', 'data/textures/FinalTV', 0.6);
+  finalScreenToObj.setup('data/3dscenes/finaltv/television.pta', 'tv', 'Camera01', 'data/textures/finaltv', 0.6);
 
   const stravaganzaFinal = new FXEuskal10Credits();
   stravaganzaFinal.setup(11, sgzTextures, 'data/textures/credits/stravaganza', 0.3, 0.5, 0.05, 0.08, 0.45, 8000.0, 2500.0, 200.0);
