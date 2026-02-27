@@ -1,0 +1,68 @@
+DEMO_START start=0
+3D_VIEWPORT viewport1=(0.5, 0.5, 1.0, 0.7) viewport2=(0.5, 0.5, 1.0, 0.7) start=0 end=172800 priority=-1
+
+3D_LOADSCENE id="room" file="data\3dscenes\cubos\cubos.pta" packfile="demo.dat" texturedir="data\textures\cubos"
+
+3D_FADE type=IN color=(0, 0, 0) start=4900 end=6900 priority=50
+
+; BALLS
+
+3D_ALPHAFUNC   start=16500 end=17500 priority= 9 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=16500 end=17500 priority=12 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+3D_CLEAR_ZBUFF start=16500 end=17500 priority= 9
+
+3D_ALPHAFUNC   start=23900 end=24900 priority=14 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=23900 end=24900 priority=17 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+3D_CLEAR_ZBUFF start=23900 end=24900 priority=14
+
+3D_ALPHAFUNC   start=26000 end=27000 priority=19 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=26000 end=27000 priority=22 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+3D_CLEAR_ZBUFF start=26000 end=27000 priority=19
+
+3D_ALPHAFUNC   start=28500 end=29500 priority=24 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=28500 end=29500 priority=27 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+3D_CLEAR_ZBUFF start=28500 end=29500 priority=24
+
+3D_ALPHAFUNC   start=31300 end=32300 priority=29 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=31300 end=32300 priority=32 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+3D_CLEAR_ZBUFF start=31300 end=32300 priority=29
+
+
+;@@@@@@ FLASH PRESPIKE
+
+
+3D_FADE type=OUT color=(1, 1, 1) start=35000 end=35900 priority=31
+3D_FADE type=IN  color=(1, 1, 1) start=35900 end=36100 priority=31
+
+
+; STENCIL TRANSITION GREETS
+
+
+
+;3D_CLEAR_ZBUFF start=122000 end=124000 priority=7
+
+
+; TENTACLES
+
+3D_ALPHAFUNC   start=128900 end=129400 priority=14 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=128900 end=129400 priority=17 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+3D_CLEAR_ZBUFF start=128900 end=129400 priority=14
+
+3D_ALPHAFUNC   start=135900 end=136400 priority=19 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=135900 end=136400 priority=22 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+3D_CLEAR_ZBUFF start=135900 end=136400 priority=19
+
+3D_ALPHAFUNC   start=142900 end=143400 priority=24 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=142900 end=143400 priority=27 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+3D_CLEAR_ZBUFF start=142900 end=143400 priority=24
+
+;3D_ALPHAFUNC   start=149900 end=150400 priority=29 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+;3D_ALPHAFUNC   start=149900 end=150400 priority=32 func=(ONE, ZERO) alpha1=0.0 alpha2=1.0
+;3D_CLEAR_ZBUFF start=149900 end=150400 priority=29
+
+
+;3D_VIEWPORT viewport1=(0.5, 0.5, 1.0, 0.7) viewport2=(0.5, 0.5, 1.0, 0.7) start=10000 end=20000 priority=6
+3D_SCENE start=85150 end=108000 priority=1 id="room" scenetime=0.0 camera="Camera01" playspeed=0.1
+
+
+3D_FADE type=OUT color=(0, 0, 0) start=165000 end=172000 priority=50
