@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PTA Viewer - Odyssey</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./lib/three.module.js"
+    }
+  }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #1a1a2e; font-family: 'Segoe UI', system-ui, sans-serif; color: #c8d0dc; font-size: 12px; }
+
+    #app { display: flex; flex-direction: column; height: 100%; }
+
+    /* Toolbar */
+    #toolbar {
+      display: flex; align-items: center; gap: 8px; padding: 6px 12px;
+      background: #16213e; border-bottom: 1px solid #0f3460;
+      flex-shrink: 0; min-height: 38px;
+    }
+    #toolbar select, #toolbar button {
+      background: #1a1a2e; color: #c8d0dc; border: 1px solid #0f3460;
+      padding: 4px 8px; border-radius: 3px; font-size: 11px; cursor: pointer;
+    }
+    #toolbar select:hover, #toolbar button:hover { border-color: #e94560; }
+    #toolbar button.active { background: #0f3460; border-color: #e94560; }
+    #timeline-container {
+      flex: 1; display: flex; align-items: center; gap: 6px; margin: 0 8px;
+    }
+    #timeline {
+      flex: 1; height: 6px; -webkit-appearance: none; appearance: none;
+      background: #0f3460; border-radius: 3px; outline: none; cursor: pointer;
+    }
+    #timeline::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px;
+      background: #e94560; border-radius: 50%; cursor: pointer;
+    }
+    #timeline::-moz-range-thumb {
+      width: 14px; height: 14px; background: #e94560;
+      border-radius: 50%; border: none; cursor: pointer;
+    }
+    #time-display { font-family: monospace; font-size: 11px; color: #8899aa; white-space: nowrap; min-width: 80px; }
+    #speed-select { width: 52px; }
+
+    /* Main panels */
+    #main { display: flex; flex: 1; overflow: hidden; }
+
+    /* Left panel */
+    #left-panel {
+      width: 250px; min-width: 200px; background: #16213e;
+      border-right: 1px solid #0f3460; overflow-y: auto; flex-shrink: 0;
+    }
+    .panel-section { border-bottom: 1px solid #0f3460; }
+    .panel-section-header {
+      padding: 6px 10px; font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px; color: #e94560;
+      background: rgba(15, 52, 96, 0.3); cursor: pointer; user-select: none;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .panel-section-header .arrow { transition: transform 0.15s; font-size: 8px; }
+    .panel-section-header.collapsed .arrow { transform: rotate(-90deg); }
+    .panel-section-content { padding: 2px 0; }
+    .panel-section-header.collapsed + .panel-section-content { display: none; }
+    .file-item {
+      padding: 3px 10px 3px 20px; cursor: pointer; white-space: nowrap;
+      overflow: hidden; text-overflow: ellipsis; font-size: 11px;
+    }
+    .file-item:hover { background: rgba(233, 69, 96, 0.1); }
+    .file-item.active { background: rgba(233, 69, 96, 0.2); color: #e94560; }
+    .dir-header {
+      padding: 3px 10px 3px 12px; cursor: pointer; font-size: 11px;
+      color: #8899aa; display: flex; align-items: center; gap: 4px;
+    }
+    .dir-header:hover { color: #c8d0dc; }
+    .dir-header .arrow { font-size: 8px; transition: transform 0.15s; }
+    .dir-header.collapsed .arrow { transform: rotate(-90deg); }
+    .dir-contents { }
+    .dir-header.collapsed + .dir-contents { display: none; }
+
+    /* Viewport */
+    #viewport {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      background: #111; position: relative; overflow: hidden;
+    }
+    #viewport canvas { display: block; }
+    #texture-preview {
+      display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: #111; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
+    }
+    #texture-preview.visible { display: flex; }
+    #texture-preview img {
+      max-width: 90%; max-height: 80%; object-fit: contain;
+      image-rendering: pixelated; border: 1px solid #333;
+    }
+    #texture-preview .info { color: #8899aa; font-size: 11px; font-family: monospace; }
+    #texture-preview .close-btn {
+      position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.6);
+      color: #ccc; border: 1px solid #444; padding: 2px 8px; cursor: pointer;
+      border-radius: 3px; font-size: 11px;
+    }
+
+    /* Right panel */
+    #right-panel {
+      width: 280px; min-width: 220px; background: #16213e;
+      border-left: 1px solid #0f3460; overflow-y: auto; flex-shrink: 0;
+    }
+    .info-section { border-bottom: 1px solid #0f3460; }
+    .info-section-header {
+      padding: 6px 10px; font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px; color: #e94560;
+      background: rgba(15, 52, 96, 0.3); cursor: pointer; user-select: none;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .info-section-header .arrow { transition: transform 0.15s; font-size: 8px; }
+    .info-section-header.collapsed .arrow { transform: rotate(-90deg); }
+    .info-section-header.collapsed + .info-section-content { display: none; }
+    .info-section-content { padding: 4px 10px; }
+    .info-row { display: flex; justify-content: space-between; padding: 1px 0; font-size: 11px; }
+    .info-row .label { color: #8899aa; }
+    .info-row .value { color: #c8d0dc; font-family: monospace; }
+    .info-item {
+      padding: 3px 0; border-bottom: 1px solid rgba(15, 52, 96, 0.3);
+      font-size: 11px;
+    }
+    .info-item:last-child { border-bottom: none; }
+    .info-item .name { color: #c8d0dc; font-weight: 500; }
+    .info-item .detail { color: #667788; font-size: 10px; font-family: monospace; }
+    .visibility-toggle {
+      cursor: pointer; opacity: 0.7; font-size: 11px;
+      margin-right: 4px; user-select: none;
+    }
+    .visibility-toggle:hover { opacity: 1; }
+    .visibility-toggle.hidden { opacity: 0.25; }
+    .color-swatch {
+      display: inline-block; width: 12px; height: 12px; border-radius: 2px;
+      border: 1px solid #444; vertical-align: middle; margin-right: 4px;
+    }
+    #no-scene-msg {
+      color: #556677; font-size: 13px; text-align: center; padding: 20px;
+    }
+
+    /* Selection */
+    .info-item.selected { background: #2a3a4a; border-left: 2px solid #5599ff; }
+    .info-item { cursor: pointer; padding-left: 10px; }
+    .transform-info {
+      padding: 6px 10px; border-top: 1px solid #2a3040; font-size: 11px;
+      font-family: monospace; background: rgba(15, 52, 96, 0.2);
+    }
+    .transform-info .tf-row { display: flex; padding: 1px 0; }
+    .transform-info .tf-label { color: #8899aa; width: 50px; flex-shrink: 0; }
+    .transform-info .tf-value { color: #c8d0dc; }
+    .transform-sliders { padding: 6px 10px; border-top: 1px solid #2a3040; font-size: 11px; }
+    .transform-sliders .slider-group-label { color: #8899aa; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 0 1px; }
+    .transform-sliders .slider-row { display: flex; align-items: center; gap: 4px; padding: 2px 0; }
+    .transform-sliders .slider-row label { color: #8899aa; width: 14px; font-weight: 600; }
+    .transform-sliders .slider-row label.axis-x { color: #ff4444; }
+    .transform-sliders .slider-row label.axis-y { color: #44cc44; }
+    .transform-sliders .slider-row label.axis-z { color: #4488ff; }
+    .transform-sliders input[type="range"] { flex: 1; height: 4px; cursor: pointer; }
+    .transform-sliders .slider-val { width: 48px; text-align: right; color: #c8d0dc; font-family: monospace; font-size: 10px; }
+
+    /* Status bar */
+    #status {
+      padding: 4px 12px; background: #16213e; border-top: 1px solid #0f3460;
+      font-size: 10px; color: #667788; flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="toolbar">
+      <select id="scene-select" title="Select PTA scene">
+        <option value="">-- Select Scene --</option>
+      </select>
+      <select id="camera-select" title="Select camera">
+        <option value="orbit">Orbit Camera</option>
+      </select>
+      <button id="play-btn" title="Play/Pause (Space)">&#9654; Play</button>
+      <div id="timeline-container">
+        <input type="range" id="timeline" min="0" max="1000" value="0" step="1" />
+        <span id="time-display">0:00 / 0:00</span>
+      </div>
+      <select id="speed-select" title="Playback speed">
+        <option value="0.25">0.25x</option>
+        <option value="0.5">0.5x</option>
+        <option value="1" selected>1x</option>
+        <option value="2">2x</option>
+      </select>
+      <button id="loop-btn" title="Toggle loop">Loop</button>
+    </div>
+    <div id="main">
+      <div id="left-panel">
+        <div class="panel-section" id="scenes-section">
+          <div class="panel-section-header"><span class="arrow">&#9660;</span> 3D Scenes</div>
+          <div class="panel-section-content" id="scenes-list"></div>
+        </div>
+        <div class="panel-section" id="textures-section">
+          <div class="panel-section-header"><span class="arrow">&#9660;</span> Textures</div>
+          <div class="panel-section-content" id="textures-list"></div>
+        </div>
+      </div>
+      <div id="viewport">
+        <div id="texture-preview">
+          <button class="close-btn" id="close-preview">&#10005; Close</button>
+          <img id="preview-img" />
+          <div class="info" id="preview-info"></div>
+        </div>
+      </div>
+      <div id="right-panel">
+        <div id="no-scene-msg">Select a scene to view details</div>
+        <div id="info-panels"></div>
+      </div>
+    </div>
+    <div id="status">Ready</div>
+  </div>
+  <script type="module" src="./src/viewer.js"></script>
+</body>
+</html>

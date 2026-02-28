@@ -13,11 +13,14 @@ const container = document.getElementById('container');
 const overlay = document.getElementById('overlay');
 const startBtn = document.getElementById('startBtn');
 const fsToggle = document.getElementById('fsToggle');
+const fsButton = document.getElementById('fsButton');
 const loadingEl = document.getElementById('loading');
 let fullscreenEnabled = true;
 
 let renderer, demoManager, musicPlayer, assetManager;
 let running = false;
+let wakeLockSentinel = null;
+let fsButtonTimer = null;
 const debugOverlay = new DebugOverlay();
 
 function togglePlayPause() {
@@ -129,8 +132,58 @@ function start() {
   loadingEl.style.display = 'none';
   running = true;
   musicPlayer.play();
+  acquireWakeLock();
   requestAnimationFrame(loop);
 }
+
+// --- WakeLock ---
+async function acquireWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    wakeLockSentinel = await navigator.wakeLock.request('screen');
+    wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; });
+  } catch { /* WakeLock denied or unavailable */ }
+}
+
+function releaseWakeLock() {
+  if (wakeLockSentinel) {
+    wakeLockSentinel.release().catch(() => {});
+    wakeLockSentinel = null;
+  }
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && running) {
+    acquireWakeLock();
+  }
+});
+
+// --- Fullscreen hover button ---
+function showFsButton() {
+  if (document.fullscreenElement || overlay.style.display !== 'none') return;
+  fsButton.classList.add('visible');
+  clearTimeout(fsButtonTimer);
+  fsButtonTimer = setTimeout(() => fsButton.classList.remove('visible'), 2000);
+}
+
+document.addEventListener('mousemove', showFsButton);
+document.addEventListener('touchstart', showFsButton, { passive: true });
+
+fsButton.addEventListener('click', async () => {
+  try {
+    await document.documentElement.requestFullscreen();
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(() => {});
+    }
+  } catch { /* fullscreen denied */ }
+});
+
+document.addEventListener('fullscreenchange', () => {
+  if (document.fullscreenElement) {
+    fsButton.classList.remove('visible');
+    clearTimeout(fsButtonTimer);
+  }
+});
 
 function loop() {
   if (!running) return;
@@ -145,6 +198,7 @@ function loop() {
   } else {
     running = false;
     musicPlayer.stop();
+    releaseWakeLock();
     overlay.style.display = '';
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {});
@@ -166,6 +220,9 @@ startBtn.addEventListener('click', async (e) => {
   if (fullscreenEnabled) {
     try {
       await document.documentElement.requestFullscreen();
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+      }
     } catch { /* fullscreen denied — start anyway */ }
   }
   start();
@@ -191,6 +248,7 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     running = false;
     musicPlayer.stop();
+    releaseWakeLock();
     debugOverlay.update(musicPlayer.getTimeMs(), demoManager.effects, demoManager.getDuration(), false);
   }
 });

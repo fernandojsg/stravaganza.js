@@ -12,7 +12,7 @@ import { FXEuskalArrows } from './effects/FXEuskalArrows.js';
 import { FXImageStencilTransition } from './effects/FXImageStencilTransition.js';
 import { FXEuskal10ParticleSteam } from './effects/FXEuskal10ParticleSteam.js';
 import { FXEP10ParticledSpheres } from './effects/FXEP10ParticledSpheres.js';
-import { FXBackgroundDistortion } from './effects/FXBackgroundDistortion.js';
+import { FXBackgroundDistortionArrows } from './effects/FXBackgroundDistortion.js';
 import { FXRadialBlurInOut } from './effects/FXRadialBlur.js';
 import { FXStencilTransitionScaleOut, FXStencilTransitionExplosionOut, FXTransitionCapture } from './effects/FXStencilTransition.js';
 import { FXBonedSpike } from './effects/FXBonedSpike.js';
@@ -87,7 +87,7 @@ export function registerAllEffects(dm) {
     return ps;
   });
 
-  const bgDistortionBalls = new FXBackgroundDistortion();
+  const bgDistortionBalls = new FXBackgroundDistortionArrows();
   bgDistortionBalls.setup(40, 40, 4300.0, steamColor);
 
   const radialBlurBalls = new FXRadialBlurInOut();

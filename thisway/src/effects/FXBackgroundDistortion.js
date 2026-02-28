@@ -138,11 +138,19 @@ export class FXBackgroundDistortion extends DemoFX {
       const dy = v - 0.5;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      // Sinusoidal displacement based on distance and time
-      const offset = Math.sin(dist * 10 + fxTime * 0.01) * amplitude;
+      // C++ applies sinf(PTA_RAD_TO_DEG(gridDist) + time*0.01) to vertex Z.
+      // PTA_RAD_TO_DEG(gridDist) = gridDist * 57.3, which aliases at 40-vertex
+      // grid to an effective ~30 rad/UV-unit after Nyquist folding.
+      const offset = Math.sin(dist * 30 + fxTime * 0.01) * amplitude;
 
-      uvs[i] = u + offset;
-      uvs[i + 1] = v + offset;
+      // Displace radially from center (not diagonally)
+      if (dist > 0.001) {
+        uvs[i] = u + (dx / dist) * offset;
+        uvs[i + 1] = v + (dy / dist) * offset;
+      } else {
+        uvs[i] = u;
+        uvs[i + 1] = v;
+      }
     }
   }
 
@@ -215,6 +223,7 @@ export class FXBackgroundDistortionArrows extends FXBackgroundDistortion {
 
   distort(uvs, original, fxTime, duration) {
     const t = Math.min(1, fxTime / duration);
+    // C++: sinf(fEffectTime / m_fDuration * PTA3D_PI) * 0.28f
     const amplitude = Math.sin(t * Math.PI) * 0.003;
 
     for (let i = 0; i < uvs.length; i += 2) {
@@ -224,9 +233,18 @@ export class FXBackgroundDistortionArrows extends FXBackgroundDistortion {
       const dy = v - 0.5;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      const offset = Math.sin(dist * 10 + fxTime * 0.01) * amplitude;
-      uvs[i] = u + offset;
-      uvs[i + 1] = v + offset;
+      // C++: sinf(gridDist - fEffectTime * 0.02f) — waves ripple outward.
+      // gridDist ≈ UV_dist * 39 for a 40-vertex grid.
+      const offset = Math.sin(dist * 39 - fxTime * 0.02) * amplitude;
+
+      // Displace radially from center (not diagonally)
+      if (dist > 0.001) {
+        uvs[i] = u + (dx / dist) * offset;
+        uvs[i + 1] = v + (dy / dist) * offset;
+      } else {
+        uvs[i] = u;
+        uvs[i + 1] = v;
+      }
     }
   }
 }

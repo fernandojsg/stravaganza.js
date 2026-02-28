@@ -81,6 +81,12 @@ export class Renderer {
 
     // Texture cache
     this.textureCache = new Map();
+    this.imageBitmapLoader = new THREE.ImageBitmapLoader();
+    this.imageBitmapLoader.setOptions({
+      imageOrientation: 'flipY',
+      premultiplyAlpha: 'none',
+      colorSpaceConversion: 'none',
+    });
 
     this.resize();
   }
@@ -226,22 +232,45 @@ export class Renderer {
       return this.textureCache.get(path);
     }
 
-    return new Promise((resolve, reject) => {
-      const loader = new THREE.TextureLoader();
-      loader.load(
-        path,
-        (texture) => {
-          texture.minFilter = THREE.LinearFilter;
-          texture.magFilter = THREE.LinearFilter;
-          texture.wrapS = THREE.RepeatWrapping;
-          texture.wrapT = THREE.RepeatWrapping;
-          this.textureCache.set(path, texture);
-          resolve(texture);
-        },
-        undefined,
-        reject
-      );
-    });
+    const configureTexture = (texture) => {
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      this.textureCache.set(path, texture);
+      return texture;
+    };
+
+    try {
+      const texture = await new Promise((resolve, reject) => {
+        this.imageBitmapLoader.load(
+          path,
+          (imageBitmap) => {
+            const tex = new THREE.Texture(imageBitmap);
+            // flipY is ignored for ImageBitmap textures; orientation is applied at decode time.
+            tex.flipY = false;
+            tex.addEventListener('dispose', () => {
+              if (imageBitmap && typeof imageBitmap.close === 'function') imageBitmap.close();
+            });
+            tex.needsUpdate = true;
+            resolve(tex);
+          },
+          undefined,
+          reject
+        );
+      });
+      return configureTexture(texture);
+    } catch {
+      return new Promise((resolve, reject) => {
+        const loader = new THREE.TextureLoader();
+        loader.load(
+          path,
+          (texture) => resolve(configureTexture(texture)),
+          undefined,
+          reject
+        );
+      });
+    }
   }
 
   /**

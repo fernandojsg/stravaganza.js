@@ -232,7 +232,7 @@ export class DebugOverlay {
     `;
 
     const video = document.createElement('video');
-    video.src = 'thisway.mp4';
+    video.src = 'odyssey.mp4';
     video.muted = true;
     video.preload = 'auto';
     video.playsInline = true;

@@ -156,15 +156,72 @@ export function interpolateCameraSettings(keys, t, defaults) {
 }
 
 /**
- * Compose a transformation matrix from initial axes + animated keys.
- * Matches PTA's pta3DAnimation::getTMatrix() composition order:
+ * Decompose a PTA matrix using PTA's row-based convention.
  *
- * 1. Start with initial axes scale
- * 2. Apply animated scale (if keys)
- * 3. Apply initial axes rotation
- * 4. Apply animated rotation (if keys)
- * 5. Apply initial axes translation
- * 6. Apply animated translation (if keys)
+ * PTA extracts scale from ROW vector lengths and builds rotation
+ * by normalizing rows. This differs from Three.js decompose() which
+ * uses column vectors. For matrices with shear (non-orthogonal axes),
+ * using PTA's convention is essential to match C++ behaviour.
+ *
+ * Three.js stores column-major: elements[0..2] = column 0.
+ * PTA M[row][col] maps to Three.js as:
+ *   PTA Row 0 = elements[0], elements[4], elements[8]
+ *   PTA Row 1 = elements[1], elements[5], elements[9]
+ *   PTA Row 2 = elements[2], elements[6], elements[10]
+ *   Position  = elements[12], elements[13], elements[14]
+ *
+ * @param {THREE.Matrix4} axes
+ * @returns {{pos: THREE.Vector3, scale: THREE.Vector3, rotMatrix: THREE.Matrix4}}
+ */
+function ptaDecompose(axes) {
+  const e = axes.elements;
+
+  // PTA rows (3x3 upper-left in PTA's M[row][col] layout)
+  const r0x = e[0], r0y = e[4], r0z = e[8];
+  const r1x = e[1], r1y = e[5], r1z = e[9];
+  const r2x = e[2], r2y = e[6], r2z = e[10];
+
+  // Scale = row vector lengths (PTA getScaleValues)
+  const sx = Math.sqrt(r0x * r0x + r0y * r0y + r0z * r0z);
+  const sy = Math.sqrt(r1x * r1x + r1y * r1y + r1z * r1z);
+  const sz = Math.sqrt(r2x * r2x + r2y * r2y + r2z * r2z);
+
+  // Rotation = normalized rows (PTA removeScale + removePos)
+  const isx = sx > 0 ? 1 / sx : 0;
+  const isy = sy > 0 ? 1 / sy : 0;
+  const isz = sz > 0 ? 1 / sz : 0;
+
+  // Build rotation matrix with normalized PTA rows, zero translation
+  // Three.js set() takes row-major args: set(n11,n12,n13,n14, n21,...n44)
+  const rotMatrix = new THREE.Matrix4();
+  rotMatrix.set(
+    r0x * isx, r0y * isx, r0z * isx, 0,
+    r1x * isy, r1y * isy, r1z * isy, 0,
+    r2x * isz, r2y * isz, r2z * isz, 0,
+    0, 0, 0, 1
+  );
+
+  // Position = PTA column 3: M[0][3], M[1][3], M[2][3]
+  const pos = new THREE.Vector3(e[12], e[13], e[14]);
+
+  return {
+    pos,
+    scale: new THREE.Vector3(sx, sy, sz),
+    rotMatrix,
+  };
+}
+
+/**
+ * Compose a transformation matrix from initial axes + animated keys.
+ * Matches PTA's pta3DAnimation::getTMatrix() exactly:
+ *
+ *   retMatrix = Identity
+ *   retMatrix.scale(axes.getScaleValues())          — PTA row-based scale
+ *   retMatrix.scale(animScl, animSclAxes)           — oriented animated scale
+ *   retMatrix = axes.getRotValues() * retMatrix     — left-multiply initial rotation
+ *   retMatrix.rotate(animRot)                       — left-multiply animated rotation
+ *   retMatrix.translate(axes.getPosValues())         — left-multiply initial translation
+ *   retMatrix.translate(animPos)                     — left-multiply animated translation
  *
  * @param {number} t - Time in ms
  * @param {{posKeys: Array, sclKeys: Array, rotKeys: Array}} animation
@@ -174,42 +231,48 @@ export function interpolateCameraSettings(keys, t, defaults) {
 export function getTransformMatrix(t, animation, initialAxes) {
   const axes = initialAxes || new THREE.Matrix4();
 
-  // Decompose initial axes
-  const axesPos = new THREE.Vector3();
-  const axesQuat = new THREE.Quaternion();
-  const axesScale = new THREE.Vector3();
-  axes.decompose(axesPos, axesQuat, axesScale);
+  // Decompose using PTA's row-based convention
+  const { pos: axesPos, scale: axesScale, rotMatrix: axesRot } = ptaDecompose(axes);
 
-  // Start building the result
-  const result = new THREE.Matrix4();
+  // Follow exact C++ getTMatrix() step order:
+  // 1. retMatrix = Identity
+  // 2. retMatrix.scale(axesScale)           → retMatrix = diag(axesScale)
+  // 3. retMatrix.scale(animScl, sAxes)      → retMatrix = buildScale * diag(axesScale)
+  // 4. retMatrix = axesRot * retMatrix       → left-multiply initial rotation
+  // 5. retMatrix.rotate(animRot)            → left-multiply animated rotation
+  // 6. retMatrix.translate(axesPos)          → left-multiply initial translation
+  // 7. retMatrix.translate(animPos)          → left-multiply animated translation
 
-  // 1. Initial axes scale
-  const scaleMatrix = new THREE.Matrix4().makeScale(axesScale.x, axesScale.y, axesScale.z);
-  result.copy(scaleMatrix);
+  // Step 1-2: Start with initial scale (diagonal)
+  const result = new THREE.Matrix4().makeScale(axesScale.x, axesScale.y, axesScale.z);
 
-  // 2. Animated scale
+  // Step 3: Animated scale (oriented along sclKey.axes quaternion)
   if (animation.sclKeys && animation.sclKeys.length > 0) {
     const sclKey = interpolateScale(animation.sclKeys, t);
-    const animScale = new THREE.Matrix4().makeScale(sclKey.scale.x, sclKey.scale.y, sclKey.scale.z);
-    result.premultiply(animScale);
+    // PTA buildScale: sAxes * diag(S) * inv(sAxes)
+    // Then addTransform (left-multiply): result = scaleMatrix * result
+    const sAxesMat = new THREE.Matrix4().makeRotationFromQuaternion(sclKey.axes);
+    const sAxesInv = sAxesMat.clone().invert();
+    const diagS = new THREE.Matrix4().makeScale(sclKey.scale.x, sclKey.scale.y, sclKey.scale.z);
+    const scaleMatrix = sAxesMat.clone().multiply(diagS).multiply(sAxesInv);
+    result.premultiply(scaleMatrix);
   }
 
-  // 3. Initial axes rotation
-  const rotMatrix = new THREE.Matrix4().makeRotationFromQuaternion(axesQuat);
-  result.premultiply(rotMatrix);
+  // Step 4: Initial rotation (left-multiply)
+  result.premultiply(axesRot);
 
-  // 4. Animated rotation
+  // Step 5: Animated rotation
   if (animation.rotKeys && animation.rotKeys.length > 0) {
     const rotQuat = interpolateRotation(animation.rotKeys, t);
     const animRot = new THREE.Matrix4().makeRotationFromQuaternion(rotQuat);
     result.premultiply(animRot);
   }
 
-  // 5. Initial axes translation
+  // Step 6: Initial axes translation
   const transMatrix = new THREE.Matrix4().makeTranslation(axesPos.x, axesPos.y, axesPos.z);
   result.premultiply(transMatrix);
 
-  // 6. Animated translation
+  // Step 7: Animated translation
   if (animation.posKeys && animation.posKeys.length > 0) {
     const posKey = interpolatePosition(animation.posKeys, t);
     const animTrans = new THREE.Matrix4().makeTranslation(posKey.x, posKey.y, posKey.z);

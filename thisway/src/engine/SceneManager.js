@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { getTransformMatrix, interpolatePosition, interpolateRotation, interpolateCameraSettings } from './AnimationSystem.js';
 
-// PTA hardcodes the aspect ratio to 2.0 (≈800/420 demo viewport).
-// FOV stored in .pta files is horizontal; PTA converts to vertical via fov/ASPECT.
-const PTA_ASPECT = 2.0;
+// Default fixed frustum aspect used by thisway PTA wrapper.
+// FOV stored in .pta files is horizontal; engine converts to vertical via fov/ASPECT.
+const DEFAULT_PTA_ASPECT = 2.0;
 // PTA fixed-function OpenGL computes specular per-vertex (Gouraud), while
 // Three.js MeshPhong computes per-fragment and looks hotter on low-poly meshes.
 const PTA_SPECULAR_VERTEX_COMPENSATION_DEFAULT = 1.0;
@@ -18,6 +18,41 @@ export class SceneManager {
     this.renderer = renderer;
     /** @type {Map<string, ManagedScene>} */
     this.scenes = new Map();
+    this.fixedFrustumAspect = DEFAULT_PTA_ASPECT;
+    // Some productions authored PTA color constants as monitor-space (sRGB-like) values.
+    // Keep legacy default behavior unless explicitly enabled by the caller.
+    this.ptaColorConstantsAreSRGB = false;
+  }
+
+  /**
+   * Enable/disable sRGB interpretation for PTA-authored color constants
+   * (materials, lights, wire colors, scene bg).
+   * @param {boolean} enabled
+   */
+  setPtaColorConstantsAreSRGB(enabled) {
+    this.ptaColorConstantsAreSRGB = !!enabled;
+  }
+
+  /**
+   * Set fixed frustum aspect used to convert horizontal FOV to vertical FOV.
+   * @param {number} aspect
+   */
+  setFixedFrustumAspect(aspect) {
+    if (Number.isFinite(aspect) && aspect > 0) {
+      this.fixedFrustumAspect = aspect;
+    }
+  }
+
+  _ptaColorFromRGB(r, g, b) {
+    if (this.ptaColorConstantsAreSRGB) {
+      return new THREE.Color().setRGB(r, g, b, THREE.SRGBColorSpace);
+    }
+    return new THREE.Color(r, g, b);
+  }
+
+  _ptaColorFromObj(c) {
+    if (!c) return new THREE.Color(0, 0, 0);
+    return this._ptaColorFromRGB(c.r, c.g, c.b);
   }
 
   /**
@@ -45,8 +80,8 @@ export class SceneManager {
 
     // Global ambient color for per-material emissive (PTA: globalAmbient * matAmbient)
     const globalAmbient = ptaScene.globalInfo
-      ? { r: ptaScene.globalInfo.ambientColor.r, g: ptaScene.globalInfo.ambientColor.g, b: ptaScene.globalInfo.ambientColor.b }
-      : { r: 0, g: 0, b: 0 };
+      ? this._ptaColorFromObj(ptaScene.globalInfo.ambientColor)
+      : new THREE.Color(0, 0, 0);
 
     // C++ OpenGL: each light has hardcoded ambient = (0.1, 0.1, 0.1) (WrpLighting.cpp:144).
     // This adds numLights * 0.1 * matAmbient to every surface — bake into emissive.
@@ -91,7 +126,7 @@ export class SceneManager {
     if (ptaScene.globalInfo) {
       const gi = ptaScene.globalInfo;
       if (gi.bgColor) {
-        managed.bgColor = new THREE.Color(gi.bgColor.r, gi.bgColor.g, gi.bgColor.b);
+        managed.bgColor = this._ptaColorFromObj(gi.bgColor);
       }
     }
 
@@ -143,7 +178,12 @@ export class SceneManager {
 
     if (!activeCamera) {
       // Fallback perspective camera
-      activeCamera = new THREE.PerspectiveCamera(60 / PTA_ASPECT, PTA_ASPECT, 0.1, 10000);
+      activeCamera = new THREE.PerspectiveCamera(
+        60 / this.fixedFrustumAspect,
+        this.fixedFrustumAspect,
+        0.1,
+        10000
+      );
       activeCamera.position.set(0, 5, 10);
       activeCamera.lookAt(0, 0, 0);
     }
@@ -151,7 +191,7 @@ export class SceneManager {
     // PTA hardcodes aspect = 2.0 in setFrustum(), regardless of viewport.
     // Even inside a 512x512 ViewportInt, the frustum uses ASPECT=2.0.
     if (activeCamera.isPerspectiveCamera) {
-      activeCamera.aspect = PTA_ASPECT;
+      activeCamera.aspect = this.fixedFrustumAspect;
       activeCamera.updateProjectionMatrix();
     }
 
@@ -180,12 +220,8 @@ export class SceneManager {
     // Three.js BRDF_Lambert divides by PI for lit (MeshPhongMaterial) materials.
     // Multiply lit diffuse by PI so the 1/PI division cancels out, matching PTA.
     // Unlit (MeshBasicMaterial) has no BRDF_Lambert — use raw diffuse directly.
-    const rawColor = new THREE.Color(matData.diffuse.r, matData.diffuse.g, matData.diffuse.b);
-    const litColor = new THREE.Color(
-      matData.diffuse.r * Math.PI,
-      matData.diffuse.g * Math.PI,
-      matData.diffuse.b * Math.PI,
-    );
+    const rawColor = this._ptaColorFromObj(matData.diffuse);
+    const litColor = rawColor.clone().multiplyScalar(Math.PI);
     const side = matData.isTwoSided ? THREE.DoubleSide : THREE.FrontSide;
 
     // Find textures by name matching
@@ -251,15 +287,16 @@ export class SceneManager {
       // C++ also adds per-light ambient: each light has hardcoded ambient = (0.1, 0.1, 0.1).
       // Total: (globalAmbient + numLights * 0.1) * materialAmbient
       const perLightAmbient = numLights * 0.1;
+      const matAmbient = this._ptaColorFromObj(matData.ambient);
       const emissive = new THREE.Color(
-        (globalAmbient.r + perLightAmbient) * matData.ambient.r,
-        (globalAmbient.g + perLightAmbient) * matData.ambient.g,
-        (globalAmbient.b + perLightAmbient) * matData.ambient.b,
+        (globalAmbient.r + perLightAmbient) * matAmbient.r,
+        (globalAmbient.g + perLightAmbient) * matAmbient.g,
+        (globalAmbient.b + perLightAmbient) * matAmbient.b,
       );
 
       const params = {
         color: litColor, side, emissive,
-        specular: new THREE.Color(matData.specular.r, matData.specular.g, matData.specular.b)
+        specular: this._ptaColorFromObj(matData.specular)
           .multiplyScalar(specularCompensation),
         // PTA: glMaterialf(GL_SHININESS, shininess * 128.0f)
         shininess: matData.shininess * 128.0,
@@ -310,6 +347,21 @@ export class SceneManager {
               #ifdef USE_MAP
                 totalEmissiveRadiance *= texture2D( map, vMapUv ).rgb;
               #endif
+            #endif
+            `
+          );
+        };
+      } else if (mapTexture) {
+        mat.onBeforeCompile = (shader) => {
+          // PTA fixed pipeline applies GL_MODULATE to the full lit result, including
+          // the ambient term. In MeshPhong, emissive is additive and not modulated by
+          // map, which creates a flat haze. Multiply emissive by map to match PTA.
+          shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <emissivemap_fragment>',
+            /* glsl */ `
+            #include <emissivemap_fragment>
+            #ifdef USE_MAP
+              totalEmissiveRadiance *= texture2D( map, vMapUv ).rgb;
             #endif
             `
           );
@@ -417,7 +469,7 @@ export class SceneManager {
       material = materials[objData.materialId];
     } else if (objData.wireColor) {
       material = new THREE.MeshBasicMaterial({
-        color: new THREE.Color(objData.wireColor.r, objData.wireColor.g, objData.wireColor.b),
+        color: this._ptaColorFromObj(objData.wireColor),
       });
     } else {
       material = new THREE.MeshBasicMaterial({ color: 0xcccccc });
@@ -500,13 +552,13 @@ export class SceneManager {
 
   _buildCamera(camData) {
     // PTA hardcodes aspect = 2.0 in setFrustum(), regardless of viewport.
-    const aspect = PTA_ASPECT;
+    const aspect = this.fixedFrustumAspect;
     // PTA stores horizontal FOV in degrees. The engine converts to vertical via:
     //   gluPerspective(fov / ASPECT, ASPECT, 1.0, zFar)
     // where ASPECT is hardcoded to 2.0 (≈800/420 viewport).
     // Three.js PerspectiveCamera expects vertical FOV in degrees.
     const hfov = camData.fov || 60;
-    const vfov = hfov / PTA_ASPECT;
+    const vfov = hfov / this.fixedFrustumAspect;
     const camera = new THREE.PerspectiveCamera(
       vfov,
       aspect,
@@ -597,14 +649,14 @@ export class SceneManager {
       });
       camera.near = settings.near > 0 ? settings.near : 1.0;
       camera.far = settings.far > 0 ? settings.far : 10000;
-      camera.fov = (settings.fov || 60) / PTA_ASPECT;
+      camera.fov = (settings.fov || 60) / this.fixedFrustumAspect;
       camera.updateProjectionMatrix();
     }
   }
 
   _buildLight(lightData) {
     let light;
-    const color = new THREE.Color(lightData.color.r, lightData.color.g, lightData.color.b);
+    const color = this._ptaColorFromObj(lightData.color);
 
     // PTA's activateLight() sends light->color directly to glLightfv(GL_DIFFUSE)
     // WITHOUT multiplying by the intensity/multiplier field. Use intensity=1 and
@@ -678,7 +730,11 @@ export class SceneManager {
           b: k0.color.b + (k1.color.b - k0.color.b) * ct,
         };
       }
-      light.color.setRGB(c.r, c.g, c.b);
+      if (this.ptaColorConstantsAreSRGB) {
+        light.color.setRGB(c.r, c.g, c.b, THREE.SRGBColorSpace);
+      } else {
+        light.color.setRGB(c.r, c.g, c.b);
+      }
     }
   }
 }

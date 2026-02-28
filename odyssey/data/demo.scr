@@ -1,0 +1,265 @@
+; **** ESCENAS *************************************************************
+
+DEMO_START start=00000
+
+;City travellings
+
+3D_LOADSCENE file="Data\3DScenes\City\city01.pta" id="City01"  texturedir="Data\Textures\3DScenes\city"  packfile="demo.dat"
+3D_LOADSCENE file="Data\3DScenes\City\city02.pta" id="City02"  texturedir="Data\Textures\3DScenes\city"  packfile="demo.dat"
+3D_LOADSCENE file="Data\3DScenes\City\sala.pta"   id="sala"    texturedir="Data\Textures\3dscenes\city"  packfile="demo.dat"
+
+; Credits:
+
+3D_LOADIMAGE file="Data\Textures\Credits\code.tga"  packfile="demo.dat"  id="code"
+3D_LOADIMAGE file="Data\Textures\Credits\gfx.tga"   packfile="demo.dat"  id="gfx"
+3D_LOADIMAGE file="Data\Textures\Credits\logo.tga"  packfile="demo.dat"  id="logo"
+3D_LOADIMAGE file="Data\Textures\Credits\music.tga" packfile="demo.dat"  id="music"
+
+; Bouncing object:
+
+3D_LOADIMAGE file="Data\Textures\Lyrics\there.tga"   id="there"   packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Lyrics\is.tga"      id="is"      packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Lyrics\no.tga"      id="no"      packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Lyrics\remorse.tga" id="remorse" packfile="demo.dat"
+
+3D_LOADIMAGE file="Data\Textures\backgrounds\bouncingobjcolumn.tga"          id="BouncingObjColumn" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\backgrounds\bouncingobjcolumnthickline.tga" id="BouncingObjColumnThickLine"  packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\backgrounds\bouncingobjcolumnbgtext.tga"    id="BouncingObjColumnBGText" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\backgrounds\bouncingobjcolumnClaim01.tga"   id="BouncingObjColumnClaim01" packfile="demo.dat"
+
+3D_LOADSCENE file="Data\3dscenes\compos1\lens01.pta" texturedir="Data\Textures\3Dscenes\compos1" id="Lens1"  packfile="demo.dat"
+3D_LOADSCENE file="Data\3dscenes\compos1\lens02.pta" texturedir="Data\Textures\3Dscenes\compos1" id="Lens2"  packfile="demo.dat"
+
+
+; Electric guitar:
+
+3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumnArcs.tga"  id="SplineColumnArcs"  packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumnIcons.tga" id="SplineColumnIcons" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumnPolar.tga" id="SplineColumnPolar" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumnText.tga"  id="SplineColumnText"  packfile="demo.dat"
+;3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumn.tga"      id="SplineColumn"      packfile="demo.dat"
+
+; Greets:
+
+3D_LOADIMAGE file="Data\Textures\Greets\greet04.tga"   id="greet1" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Greets\greet05.tga"   id="greet2" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Greets\greet06.tga"   id="greet3" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Greets\greet08.tga"   id="greet4" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Greets\greet10.tga"   id="greet5" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Greets\greet12.tga"   id="greet6" packfile="demo.dat"
+
+3D_LOADIMAGE file="Data\Textures\Greets\Stravaganza2001.tga" id="Stravaganza2001" packfile="demo.dat"
+3D_LOADIMAGE file="Data\Textures\Backgrounds\GreetsAlphaLayer.tga" id="GreetsAlphaLayer" packfile="demo.dat"
+
+; **** IMAGENES ************************************************************
+
+
+; **** EFECTOS GLOBALES ****************************************************
+
+
+3D_VIEWPORT start=0 end=170000 priority=0 viewport1=(0.5, 0.5, 1.0, 0.85) viewport2=(0.5, 0.5, 1.0, 0.85)
+
+
+; **** DEMO ****************************************************************
+
+
+; ---- CREDITS ----
+
+3D_SCENE start=00000 end=07000 priority=1 id="City01"  camera="Camera01" scenetime=0.0 playspeed=1
+3D_CLEAR_ZBUFF start=6000 end=7000 priority=2
+3D_ALPHAFUNC start=6000 end=7000 priority=2 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC start=6000 end=7000 priority=4 func=(ONE, ZERO)
+
+3D_SCENE start=06000 end=12000 priority=3 id="City01"  camera="Camera02" scenetime=900.0 playspeed=1.0
+3D_CLEAR_ZBUFF start=10000 end=12000 priority=4
+3D_ALPHAFUNC start=10000 end=12000 priority=4 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC start=10000 end=12000 priority=6 func=(ONE, ZERO)
+
+3D_SCENE start=10000 end=24700 priority=5 id="City01"  camera="Camera03" scenetime=0.0
+3D_SCENE start=24700 end=43300 priority=5 id="City01"  camera="Camera07" scenetime=0.0
+3D_SCENE start=43300 end=51300 priority=5 id="City02"  camera="Camera01" scenetime=0000.0 playspeed=1
+3D_SCENE start=49300 end=55790 priority=7 id="City02"  camera="Camera05" scenetime=6350.0 playspeed=1
+
+3D_CLEAR_ZBUFF start=49300 end=51300 priority=6
+3D_ALPHAFUNC   start=49300 end=51300 priority=6 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=49300 end=51300 priority=8 func=(ONE, ZERO)
+
+
+;CODE : ITHAQUA
+
+3D_IMAGE start=012300 end=012600 priority=7 id="code" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.30, 0.16) pos2=(0.30, 0.16) alpha1=0.0 alpha2=1.0
+3D_IMAGE start=012500 end=016000 priority=7 id="code" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.30, 0.16) pos2=(0.30, 0.16) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=016000 end=016300 priority=7 id="code" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.30, 0.16) pos2=(0.30, 0.16) alpha1=1.0 alpha2=0.0
+3D_FLASH start=012200 end=012400 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=012700 end=013000 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=015200 end=015500 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=015800 end=016100 priority=9 color=(1.0, 1.0, 1.0)
+
+;GFX : TEKNO
+
+3D_IMAGE start=018500 end=018800 priority=7 id="gfx" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.75, 0.15) pos2=(0.75, 0.15) alpha1=0.0 alpha2=1.0
+3D_IMAGE start=018800 end=022900 priority=7 id="gfx" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.75, 0.15) pos2=(0.75, 0.15) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=022900 end=023200 priority=7 id="gfx" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.75, 0.15) pos2=(0.75, 0.15) alpha1=1.0 alpha2=0.0
+3D_FLASH start=018400 end=018600 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=018900 end=019200 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=021600 end=021800 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=022100 end=022400 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=022700 end=023000 priority=9 color=(1.0, 1.0, 1.0)
+
+;LOGO : INTERFACE
+3D_IMAGE start=024800 end=025100 priority=7 id="logo" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.62, 0.5) pos2=(0.62, 0.5) alpha1=0.0 alpha2=1.0
+3D_IMAGE start=025100 end=030400 priority=7 id="logo" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.62, 0.5) pos2=(0.62, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=030400 end=030700 priority=7 id="logo" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.62, 0.5) pos2=(0.62, 0.5) alpha1=1.0 alpha2=0.0
+3D_FLASH start=024600 end=024900 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=025200 end=025500 priority=9 color=(1.0, 1.0, 1.0)
+
+;MUSIC : WONDER
+3D_IMAGE start=030800 end=031200 priority=7 id="music" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.35, 0.67) pos2=(0.35, 0.67) alpha1=0.0 alpha2=1.0
+3D_IMAGE start=031200 end=034200 priority=7 id="music" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.35, 0.67) pos2=(0.35, 0.67) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=034200 end=034700 priority=7 id="music" size1=(0.3, 0.1) size2=(0.3, 0.1) pos1=(0.35, 0.67) pos2=(0.35, 0.67) alpha1=1.0 alpha2=0.0
+3D_FLASH start=030900 end=031200 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=031500 end=031800 priority=9 color=(1.0, 1.0, 1.0)
+3D_FLASH start=033900 end=034200 priority=9 color=(1.0, 1.0, 1.0)
+
+;FLASH GRANDE
+3D_FADE  start=041000 end=043300 priority=9 color=(1.0, 1.0, 1.0) type=OUT
+3D_FADE  start=043300 end=044000 priority=9 color=(1.0, 1.0, 1.0) type=IN
+
+3D_SCENE start=058804 end=061959 priority=5 id="City02"  camera="Camera03" scenetime=0.0    playspeed=1
+3D_SCENE start=065073 end=068078 priority=5 id="City02"  camera="Camera03" scenetime=700.0  playspeed=1
+3D_SCENE start=071232 end=074297 priority=5 id="City02"  camera="Camera03" scenetime=1500.0 playspeed=1
+3D_SCENE start=077391 end=080500 priority=5 id="City02"  camera="Camera03" scenetime=2100.0 playspeed=1
+
+
+; ---- COMPOSICION1 ----
+
+;there
+;is
+;no
+;remorse
+
+3D_IMAGE start=056670 end=056804 priority=08 id="there"   size1=(0.15, 0.051) size2=(0.15, 0.051) pos1=(-0.1, 0.45)  pos2=(0.59, 0.45)  alpha1=1.0 alpha2=1.0
+3D_IMAGE start=056670 end=056804 priority=08 id="is"      size1=(0.07, 0.040) size2=(0.07, 0.040) pos1=(0.70, -0.1)  pos2=(0.70, 0.44) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=056670 end=056804 priority=08 id="no"      size1=(0.15, 0.070) size2=(0.15, 0.070) pos1=(1.1,  0.50)  pos2=(0.61, 0.50)  alpha1=1.0 alpha2=1.0
+3D_IMAGE start=056670 end=056804 priority=08 id="remorse" size1=(0.24, 0.048) size2=(0.24, 0.048) pos1=(0.785, 1.1)  pos2=(0.785, 0.51) alpha1=1.0 alpha2=1.0
+
+3D_IMAGE start=056790 end=057804 priority=08 id="there"   size1=(0.15, 0.051) size2=(0.15, 0.051) pos1=(0.59, 0.45)  pos2=(0.61, 0.45) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=056790 end=057804 priority=08 id="is"      size1=(0.07, 0.040) size2=(0.07, 0.040) pos1=(0.70, 0.44) pos2=(0.70, 0.46) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=056790 end=057804 priority=08 id="no"      size1=(0.15, 0.070) size2=(0.15, 0.070) pos1=(0.61, 0.50)  pos2=(0.59, 0.50) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=056790 end=057804 priority=08 id="remorse" size1=(0.24, 0.048) size2=(0.24, 0.048) pos1=(0.785, 0.51) pos2=(0.785, 0.49) alpha1=1.0 alpha2=1.0
+
+3D_IMAGE start=057804 end=057958 priority=08 id="there"   size1=(0.15, 0.051) size2=(0.15, 0.051) pos1=(0.61, 0.45)  pos2=(1.1, 0.45) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=057804 end=057958 priority=08 id="is"      size1=(0.07, 0.040) size2=(0.07, 0.040) pos1=(0.70, 0.46) pos2=(0.70, 1.1) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=057804 end=057958 priority=08 id="no"      size1=(0.15, 0.070) size2=(0.15, 0.070) pos1=(0.59, 0.50)  pos2=(-0.1, 0.50) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=057804 end=057958 priority=08 id="remorse" size1=(0.24, 0.048) size2=(0.24, 0.048) pos1=(0.785, 0.49) pos2=(0.785, -0.1) alpha1=1.0 alpha2=1.0
+
+
+3D_SCENE start=055790 end=058804 priority=07 scenetime=0 playspeed=1.0 camera="Camera01" id="Lens2"
+3D_SCENE start=061959 end=065073 priority=07 scenetime=0 playspeed=1.0 camera="Camera01" id="Lens2"
+3D_SCENE start=068078 end=071232 priority=07 scenetime=0 playspeed=1.0 camera="Camera01" id="Lens1"
+3D_SCENE start=074297 end=077391 priority=07 scenetime=0 playspeed=1.0 camera="Camera01" id="Lens1"
+
+3D_IMAGE start=055790 end=058804 priority=03 id="BouncingObjColumn"          size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=055790 end=058804 priority=06 id="BouncingObjColumnThickLine" size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=055790 end=058804 priority=04 id="BouncingObjColumnBGText"    size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=055790 end=058804 priority=05 id="BouncingObjColumnClaim01"   size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+
+3D_IMAGE start=061959 end=065073 priority=03 id="BouncingObjColumn"          size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=061959 end=065073 priority=06 id="BouncingObjColumnThickLine" size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=061959 end=065073 priority=04 id="BouncingObjColumnBGText"    size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=061959 end=065073 priority=05 id="BouncingObjColumnClaim01"   size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+
+3D_IMAGE start=068078 end=071232 priority=03 id="BouncingObjColumn"          size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=068078 end=071232 priority=06 id="BouncingObjColumnThickLine" size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=068078 end=071232 priority=04 id="BouncingObjColumnBGText"    size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=068078 end=071232 priority=05 id="BouncingObjColumnClaim01"   size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+
+3D_IMAGE start=074297 end=077391 priority=03 id="BouncingObjColumn"          size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=074297 end=077391 priority=06 id="BouncingObjColumnThickLine" size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=074297 end=077391 priority=04 id="BouncingObjColumnBGText"    size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=074297 end=077391 priority=05 id="BouncingObjColumnClaim01"   size1=(0.35, 1.0) size2=(0.35, 1.0) pos1=(0.20, 0.5) pos2=(0.20, 0.5) alpha1=1.0 alpha2=1.0
+
+3D_SCENE start=080500 end=083500 priority=2 id="sala"  camera="Camera08" scenetime=2000 playspeed=0.3
+3D_SCENE start=083500 end=086800 priority=2 id="sala"  camera="Camera03" scenetime=0 playspeed=0.5
+3D_SCENE start=086800 end=092513 priority=2 id="sala"  camera="Camera05" scenetime=0 playspeed=0.5
+
+; ---- GUITARRA ----
+
+;3D_IMAGE start=092513 end=108300 priority=10 id="SplineColumn"      size1=(0.40, 1.00) size2=(0.40, 1.00) pos1=(0.20, 0.50) pos2=(0.20, 0.50) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=092513 end=108300 priority=06 id="SplineColumnArcs"  size1=(0.15, 0.20) size2=(0.15, 0.20) pos1=(0.07, 0.25) pos2=(0.07, 0.25) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=092513 end=108300 priority=07 id="SplineColumnIcons" size1=(0.40, 0.10) size2=(0.40, 0.10) pos1=(0.20, 0.06) pos2=(0.20, 0.06) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=092513 end=108300 priority=08 id="SplineColumnPolar" size1=(0.40, 1.00) size2=(0.40, 1.00) pos1=(0.20, 0.50) pos2=(0.20, 0.50) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=092513 end=108300 priority=09 id="SplineColumnText"  size1=(0.035, 0.45) size2=(0.035, 0.45) pos1=(0.04, 0.75) pos2=(0.04, 0.75) alpha1=1.0 alpha2=1.0
+
+
+; -- Viewports + Escenas 3D ---
+
+3D_SCENE        start=108300 end=111279 priority=01 scenetime=0 playspeed=1.0 camera="Camera01" id="sala"
+3D_VIEWPORT     start=110579 end=111279 priority=04 viewport1=(0.5, 0.5, 0.08, 0.08) viewport2=(0.5, 0.5, 1.0, 1.0)
+3D_CLEAR_ZBUFF  start=110579 end=111279 priority=02
+
+3D_SCENE        start=110579 end=114283 priority=05 scenetime=0 playspeed=1.0 camera="Camera07" id="sala"
+3D_VIEWPORT     start=113583 end=114283 priority=08 viewport1=(0.25, 0.25, 0.08, 0.08) viewport2=(0.5, 0.5, 1.0, 1.0)
+3D_CLEAR_ZBUFF  start=113583 end=114283 priority=06
+
+3D_SCENE        start=113583 end=117137 priority=09 scenetime=0 playspeed=0.6 camera="Camera03" id="sala"
+3D_VIEWPORT     start=116437 end=117137 priority=12 viewport1=(0.75, 0.75, 0.08, 0.08) viewport2=(0.5, 0.5, 1.0, 1.0)
+3D_CLEAR_ZBUFF  start=116437 end=117137 priority=10
+
+3D_SCENE        start=116437 end=123486 priority=13 scenetime=0 playspeed=1.0 camera="Camera04" id="sala"
+3D_VIEWPORT     start=122786 end=123486 priority=16 viewport1=(0.25, 0.75, 0.08, 0.08) viewport2=(0.5, 0.5, 1.0, 1.0)
+3D_CLEAR_ZBUFF  start=122786 end=123486 priority=14
+
+3D_SCENE        start=122786 end=126673 priority=17 scenetime=0 playspeed=1.0 camera="Camera05" id="sala"
+3D_VIEWPORT     start=125973 end=126673 priority=20 viewport1=(0.75, 0.25, 0.08, 0.08) viewport2=(0.5, 0.5, 1.0, 1.0)
+3D_CLEAR_ZBUFF  start=125973 end=126673 priority=18
+
+3D_SCENE        start=125973 end=129595 priority=21 scenetime=0 playspeed=1.0 camera="Camera06" id="sala"
+3D_VIEWPORT     start=128895 end=129595 priority=24 viewport1=(0.35, 0.65, 0.08, 0.08) viewport2=(0.5, 0.5, 1.0, 1.0)
+3D_CLEAR_ZBUFF  start=128895 end=129595 priority=22
+
+3D_SCENE        start=128895 end=134600 priority=25 scenetime=0 playspeed=1.0 camera="Camera09" id="sala"
+
+3D_MOTIONBLUR   start=134600 end=139500 priority=01 state=ON
+3D_SCENE        start=134600 end=139500 priority=25 scenetime=0 playspeed=0.35 camera="Camera04" id="sala"
+3D_MOTIONBLUR   start=139500 end=146500 priority=01 state=OFF
+
+3D_FADE         start=138500 end=139500 priority=26 type=OUT color=(1.0, 1.0, 1.0)
+3D_FADE         start=139500 end=140000 priority=26 type=IN color=(1.0, 1.0, 1.0) 
+
+;3D_SCENE       start=139500 end=146000 priority=1 id="City01"  camera="Camera02" scenetime=4200.0 playspeed=0.25
+3D_CLEAR_ZBUFF start=145000 end=146000 priority=2
+3D_ALPHAFUNC   start=145000 end=146000 priority=2 func=(ALPHA, INVALPHA) alpha1=0.0 alpha2=1.0
+3D_ALPHAFUNC   start=145000 end=146000 priority=4 func=(ONE, ZERO)
+;3D_SCENE       start=145000 end=151400 priority=3 id="City01"  camera="Camera04" scenetime=1500.0 playspeed=1.0
+
+
+3D_SCENE start=139500 end=146000 priority=1 id="City01"  camera="Camera09" scenetime=0.0 playspeed=0.4
+3D_SCENE start=145000 end=151400 priority=3 id="City01"  camera="Camera06" scenetime=0.0 playspeed=0.2
+
+
+; ---- GREETS ----
+
+; Background intensity layer
+
+3D_IMAGE start=155502 end=156724.0 priority=55 id="greet1" size1=(0.3, 0.06) size2=(0.3, 0.06) pos1=( 1.1, 0.3) pos2=(-0.1, 0.3) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=155602 end=156824.0 priority=55 id="greet2" size1=(0.3, 0.06) size2=(0.3, 0.06) pos1=( 1.1, 0.4) pos2=(-0.1, 0.4) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=155702 end=156924.0 priority=55 id="greet3" size1=(0.3, 0.06) size2=(0.3, 0.06) pos1=( 1.1, 0.5) pos2=(-0.1, 0.5) alpha1=1.0 alpha2=1.0
+
+3D_IMAGE start=155802 end=157024.0 priority=55 id="greet4" size1=(0.3, 0.06) size2=(0.3, 0.06) pos1=(-0.1, 0.6) pos2=( 1.1, 0.6) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=155902 end=157124.0 priority=55 id="greet5" size1=(0.3, 0.06) size2=(0.3, 0.06) pos1=(-0.1, 0.7) pos2=( 1.1, 0.7) alpha1=1.0 alpha2=1.0
+3D_IMAGE start=156002 end=157224.0 priority=55 id="greet6" size1=(0.3, 0.06) size2=(0.3, 0.06) pos1=(-0.1, 0.8) pos2=( 1.1, 0.8) alpha1=1.0 alpha2=1.0
+
+; Greets hipermovement
+
+3D_IMAGE start=169000 end=170000 priority=03 id="Stravaganza2001" size1=(1.0, 0.3) size2=(1.0, 0.3) pos1=(0.5, 0.40) pos2=(0.5, 0.40) alpha1=1.0 alpha2=0.0
+
+; Superpeich final
+
+3D_FADE  start=162000 end=162700 priority=111 color=(1.0, 1.0, 1.0) type=OUT
+3D_FADE  start=162700 end=163400 priority=111 color=(1.0, 1.0, 1.0) type=IN
+3D_IMAGE start=162700 end=169000 priority=03 id="Stravaganza2001" size1=(1.0, 0.3) size2=(1.0, 0.3) pos1=(0.5, 0.40) pos2=(0.5, 0.40) alpha1=1.0 alpha2=1.0
+
+;3D_IMAGE start=169000 end=160000 priority=03 id="Stravaganza2001" size1=(1.0, 0.3) size2=(1.0, 0.3) pos1=(0.5, 0.40) pos2=(0.5, 0.40) alpha1=1.0 alpha2=0.0
+;3D_SCENE start=000000 end=100000 priority=01 id="greets" camera="Camera01" scenetime=0.0 playspeed=1.0
+

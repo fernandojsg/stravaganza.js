@@ -4,6 +4,14 @@ JavaScript ports of demos and intros by the demoscene group [**Stravaganza**](ht
 
 ## Productions
 
+### Odyssey (2001)
+
+Stravaganza's first demo, originally released in 2001.
+
+- **Original**: [Odyssey](https://www.pouet.net/prod.php?which=3236) — Win32 demo by Stravaganza (2001)
+
+The port in this repo (`odyssey/`) is a pixel-accurate reimplementation using Three.js, built from the C++ source code.
+
 ### This Way (2002)
 
 Originally released at Euskal 10.
