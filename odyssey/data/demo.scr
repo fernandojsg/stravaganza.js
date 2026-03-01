@@ -4,52 +4,52 @@ DEMO_START start=00000
 
 ;City travellings
 
-3D_LOADSCENE file="Data\3DScenes\City\city01.pta" id="City01"  texturedir="Data\Textures\3DScenes\city"  packfile="demo.dat"
-3D_LOADSCENE file="Data\3DScenes\City\city02.pta" id="City02"  texturedir="Data\Textures\3DScenes\city"  packfile="demo.dat"
-3D_LOADSCENE file="Data\3DScenes\City\sala.pta"   id="sala"    texturedir="Data\Textures\3dscenes\city"  packfile="demo.dat"
+3D_LOADSCENE file="data\3dscenes\city\city01.pta" id="City01"  texturedir="data\textures\3dscenes\city"  packfile="demo.dat"
+3D_LOADSCENE file="data\3dscenes\city\city02.pta" id="City02"  texturedir="data\textures\3dscenes\city"  packfile="demo.dat"
+3D_LOADSCENE file="data\3dscenes\city\sala.pta"   id="sala"    texturedir="data\textures\3dscenes\city"  packfile="demo.dat"
 
 ; Credits:
 
-3D_LOADIMAGE file="Data\Textures\Credits\code.tga"  packfile="demo.dat"  id="code"
-3D_LOADIMAGE file="Data\Textures\Credits\gfx.tga"   packfile="demo.dat"  id="gfx"
-3D_LOADIMAGE file="Data\Textures\Credits\logo.tga"  packfile="demo.dat"  id="logo"
-3D_LOADIMAGE file="Data\Textures\Credits\music.tga" packfile="demo.dat"  id="music"
+3D_LOADIMAGE file="data\textures\credits\code.tga"  packfile="demo.dat"  id="code"
+3D_LOADIMAGE file="data\textures\credits\gfx.tga"   packfile="demo.dat"  id="gfx"
+3D_LOADIMAGE file="data\textures\credits\logo.tga"  packfile="demo.dat"  id="logo"
+3D_LOADIMAGE file="data\textures\credits\music.tga" packfile="demo.dat"  id="music"
 
 ; Bouncing object:
 
-3D_LOADIMAGE file="Data\Textures\Lyrics\there.tga"   id="there"   packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Lyrics\is.tga"      id="is"      packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Lyrics\no.tga"      id="no"      packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Lyrics\remorse.tga" id="remorse" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\lyrics\there.tga"   id="there"   packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\lyrics\is.tga"      id="is"      packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\lyrics\no.tga"      id="no"      packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\lyrics\remorse.tga" id="remorse" packfile="demo.dat"
 
-3D_LOADIMAGE file="Data\Textures\backgrounds\bouncingobjcolumn.tga"          id="BouncingObjColumn" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\backgrounds\bouncingobjcolumnthickline.tga" id="BouncingObjColumnThickLine"  packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\backgrounds\bouncingobjcolumnbgtext.tga"    id="BouncingObjColumnBGText" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\backgrounds\bouncingobjcolumnClaim01.tga"   id="BouncingObjColumnClaim01" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\bouncingobjcolumn.tga"          id="BouncingObjColumn" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\bouncingobjcolumnthickline.tga" id="BouncingObjColumnThickLine"  packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\bouncingobjcolumnbgtext.tga"    id="BouncingObjColumnBGText" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\bouncingobjcolumnclaim01.tga"   id="BouncingObjColumnClaim01" packfile="demo.dat"
 
-3D_LOADSCENE file="Data\3dscenes\compos1\lens01.pta" texturedir="Data\Textures\3Dscenes\compos1" id="Lens1"  packfile="demo.dat"
-3D_LOADSCENE file="Data\3dscenes\compos1\lens02.pta" texturedir="Data\Textures\3Dscenes\compos1" id="Lens2"  packfile="demo.dat"
+3D_LOADSCENE file="data\3dscenes\compos1\lens01.pta" texturedir="data\textures\3dscenes\compos1" id="Lens1"  packfile="demo.dat"
+3D_LOADSCENE file="data\3dscenes\compos1\lens02.pta" texturedir="data\textures\3dscenes\compos1" id="Lens2"  packfile="demo.dat"
 
 
 ; Electric guitar:
 
-3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumnArcs.tga"  id="SplineColumnArcs"  packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumnIcons.tga" id="SplineColumnIcons" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumnPolar.tga" id="SplineColumnPolar" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumnText.tga"  id="SplineColumnText"  packfile="demo.dat"
-;3D_LOADIMAGE file="Data\Textures\backgrounds\SplineColumn.tga"      id="SplineColumn"      packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\splinecolumnarcs.tga"  id="SplineColumnArcs"  packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\splinecolumnicons.tga" id="SplineColumnIcons" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\splinecolumnpolar.tga" id="SplineColumnPolar" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\splinecolumntext.tga"  id="SplineColumnText"  packfile="demo.dat"
+;3D_LOADIMAGE file="data\textures\backgrounds\splinecolumn.tga"      id="SplineColumn"      packfile="demo.dat"
 
 ; Greets:
 
-3D_LOADIMAGE file="Data\Textures\Greets\greet04.tga"   id="greet1" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Greets\greet05.tga"   id="greet2" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Greets\greet06.tga"   id="greet3" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Greets\greet08.tga"   id="greet4" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Greets\greet10.tga"   id="greet5" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Greets\greet12.tga"   id="greet6" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\greets\greet04.tga"   id="greet1" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\greets\greet05.tga"   id="greet2" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\greets\greet06.tga"   id="greet3" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\greets\greet08.tga"   id="greet4" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\greets\greet10.tga"   id="greet5" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\greets\greet12.tga"   id="greet6" packfile="demo.dat"
 
-3D_LOADIMAGE file="Data\Textures\Greets\Stravaganza2001.tga" id="Stravaganza2001" packfile="demo.dat"
-3D_LOADIMAGE file="Data\Textures\Backgrounds\GreetsAlphaLayer.tga" id="GreetsAlphaLayer" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\greets\stravaganza2001.tga" id="Stravaganza2001" packfile="demo.dat"
+3D_LOADIMAGE file="data\textures\backgrounds\greetsalphalayer.tga" id="GreetsAlphaLayer" packfile="demo.dat"
 
 ; **** IMAGENES ************************************************************
 

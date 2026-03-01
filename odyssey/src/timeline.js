@@ -71,11 +71,11 @@ export function registerAllEffects(dm) {
     const [start, end] = bounceTimes[i];
 
     const bg = new FXBackground1();
-    bg.setup(20, 0.7, 0.7, 'data/textures/backgrounds/BouncingObjBackground.tga');
+    bg.setup(20, 0.7, 0.7, 'data/textures/backgrounds/bouncingobjbackground.tga');
     dm.addFX(bg, start, end, 1, `Bouncing object background ${i + 1}`);
 
     const wavBlur = new FXWavingBlur();
-    wavBlur.setup(0.5, 0.5, 1.2, 1.2, 30, 20, 'data/textures/backgrounds/BouncingObjWBlur.jpg', 100000);
+    wavBlur.setup(0.5, 0.5, 1.2, 1.2, 30, 20, 'data/textures/backgrounds/bouncingobjwblur.jpg', 100000);
     dm.addFX(wavBlur, start, end, 2, `Bouncing object waving blur ${i + 1}`);
 
     const bouncing = new FXBouncingObject();
@@ -112,11 +112,11 @@ export function registerAllEffects(dm) {
   // ============================================================
 
   const egBackground = new FXBackground1();
-  egBackground.setup(15, 0.7, 0.7, 'data/textures/backgrounds/ElGuitar1.tga');
+  egBackground.setup(15, 0.7, 0.7, 'data/textures/backgrounds/elguitar1.tga');
   dm.addFX(egBackground, 92513, 108300, 1, 'EG Background');
 
   const egWavBlur = new FXWavingBlur();
-  egWavBlur.setup(0.5, 0.5, 1.0, 1.0, 50, 24, 'data/textures/backgrounds/ElGuitar1.tga', 18000);
+  egWavBlur.setup(0.5, 0.5, 1.0, 1.0, 50, 24, 'data/textures/backgrounds/elguitar1.tga', 18000);
   dm.addFX(egWavBlur, 92513, 108300, 2, 'EG Ghost blur');
 
   const egPartColumn = new FXParticleColumn();
@@ -141,7 +141,7 @@ export function registerAllEffects(dm) {
   // Viewport trails (6 groups of 4 quad trails)
   // ============================================================
 
-  const vpTexture = 'data/textures/viewports/ViewportQuad.tga';
+  const vpTexture = 'data/textures/viewports/viewportquad.tga';
   const vpParams = { numQuads: 15, numSim: 50, startSize: 0.1, endSize: 0.25, startAngle: 0.0, endAngle: 180.0, duration: 1200.0 };
 
   // Start positions: 4 corners
@@ -192,7 +192,7 @@ export function registerAllEffects(dm) {
   // ============================================================
 
   const greetSpiral = new FXSpiral1();
-  greetSpiral.setup(25, { x: 0.75, y: 0.70, z: 0.0 }, 0.0, 0.45, 280.0, 'data/textures/backgrounds/ElGuitarSpiral.jpg');
+  greetSpiral.setup(25, { x: 0.75, y: 0.70, z: 0.0 }, 0.0, 0.45, 280.0, 'data/textures/backgrounds/elguitarspiral.jpg');
   dm.addFX(greetSpiral, 171400 - megapeich, 182700 - megapeich, 3, 'Greet Spiral');
 
   const greetBackground = new FXBackground1();
@@ -219,12 +219,12 @@ export function registerAllEffects(dm) {
   const fWidth1 = 1.2, fWidth2 = 0.3, fHeight1 = 0.45, fHeight2 = 0.06;
 
   const greetData = [
-    { y: 0.20, tex: 'Greet01.tga', h2: fHeight2 - 0.01, timeTillFade: 3000, startMs: 172237 },
-    { y: 0.33, tex: 'Greet09.tga', h2: fHeight2, timeTillFade: 2400, startMs: 172837 },
-    { y: 0.46, tex: 'Greet03.tga', h2: fHeight2, timeTillFade: 1800, startMs: 173459 },
-    { y: 0.59, tex: 'Greet02.tga', h2: fHeight2, timeTillFade: 1200, startMs: 174050 },
-    { y: 0.72, tex: 'Greet07.tga', h2: fHeight2, timeTillFade: 600, startMs: 174631 },
-    { y: 0.85, tex: 'Greet11.tga', h2: fHeight2 - 0.01, timeTillFade: 0, startMs: 175252 },
+    { y: 0.20, tex: 'greet01.tga', h2: fHeight2 - 0.01, timeTillFade: 3000, startMs: 172237 },
+    { y: 0.33, tex: 'greet09.tga', h2: fHeight2, timeTillFade: 2400, startMs: 172837 },
+    { y: 0.46, tex: 'greet03.tga', h2: fHeight2, timeTillFade: 1800, startMs: 173459 },
+    { y: 0.59, tex: 'greet02.tga', h2: fHeight2, timeTillFade: 1200, startMs: 174050 },
+    { y: 0.72, tex: 'greet07.tga', h2: fHeight2, timeTillFade: 600, startMs: 174631 },
+    { y: 0.85, tex: 'greet11.tga', h2: fHeight2 - 0.01, timeTillFade: 0, startMs: 175252 },
   ];
 
   for (let i = 0; i < greetData.length; i++) {
@@ -237,13 +237,13 @@ export function registerAllEffects(dm) {
 
   // Individual respect lines
   const respectData = [
-    { y: 0.2, tex: 'Respect01.tga', h2: fHeight2, timeTillFade: 4200, startMs: 177024 },
-    { y: 0.3, tex: 'Respect02.tga', h2: fHeight2, timeTillFade: 3600, startMs: 177635 },
-    { y: 0.4, tex: 'Respect03.tga', h2: fHeight2, timeTillFade: 3000, startMs: 178236 },
-    { y: 0.5, tex: 'Respect04.tga', h2: fHeight2, timeTillFade: 2400, startMs: 178827 },
-    { y: 0.6, tex: 'Respect05.tga', h2: fHeight2 - 0.01, timeTillFade: 1800, startMs: 179418 },
-    { y: 0.7, tex: 'Respect06.tga', h2: fHeight2, timeTillFade: 1200, startMs: 180018 },
-    { y: 0.8, tex: 'Respect07.tga', h2: fHeight2, timeTillFade: 600, startMs: 180619 },
+    { y: 0.2, tex: 'respect01.tga', h2: fHeight2, timeTillFade: 4200, startMs: 177024 },
+    { y: 0.3, tex: 'respect02.tga', h2: fHeight2, timeTillFade: 3600, startMs: 177635 },
+    { y: 0.4, tex: 'respect03.tga', h2: fHeight2, timeTillFade: 3000, startMs: 178236 },
+    { y: 0.5, tex: 'respect04.tga', h2: fHeight2, timeTillFade: 2400, startMs: 178827 },
+    { y: 0.6, tex: 'respect05.tga', h2: fHeight2 - 0.01, timeTillFade: 1800, startMs: 179418 },
+    { y: 0.7, tex: 'respect06.tga', h2: fHeight2, timeTillFade: 1200, startMs: 180018 },
+    { y: 0.8, tex: 'respect07.tga', h2: fHeight2, timeTillFade: 600, startMs: 180619 },
   ];
 
   for (let i = 0; i < respectData.length; i++) {

@@ -119,7 +119,7 @@ export class AssetManager {
     const normalizedPath = path.replace(/\\/g, '/');
     if (this.ptaScenes.has(normalizedPath)) return this.ptaScenes.get(normalizedPath);
 
-    const url = `${this.basePath}${normalizedPath}`;
+    const url = `${this.basePath}${normalizedPath}`.toLowerCase();
     const scene = await loadPtaFile(url);
     // Keep source path so SceneManager can apply per-scene compatibility tuning.
     scene.sourcePath = normalizedPath;
@@ -136,7 +136,7 @@ export class AssetManager {
   async loadImage(id, file) {
     if (this.images.has(id)) return this.images.get(id);
 
-    const url = `${this.basePath}${file}`;
+    const url = `${this.basePath}${file}`.toLowerCase();
     try {
       const texture = await this._loadTextureUrl(url);
       this.images.set(id, texture);
@@ -198,7 +198,8 @@ export class AssetManager {
 
   _loadTextureUrl(url) {
     // TGA files have been converted to PNG — redirect automatically
-    const loadUrl = url.replace(/\.tga$/i, '.png');
+    // Lowercase URL for case-sensitive servers (GitHub Pages / Linux)
+    const loadUrl = url.toLowerCase().replace(/\.tga$/i, '.png');
     return this._loadTextureWithImageBitmap(loadUrl).catch(() => this._loadTextureWithImageElement(loadUrl));
   }
 
